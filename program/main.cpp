@@ -103,6 +103,9 @@ void output(int value){
 
 void generator(char file_name[]){
 
+    bool debug = false;
+    bool stat = true;
+
     // Send a loading message
     output(1);
 
@@ -143,22 +146,30 @@ void generator(char file_name[]){
     
     // [Latex] Add game raound
     bool toggle = false;
-    while (toggle != true){
+    int round = 1;
+
+    int stat1 = 0;
+    int stat2 = 0;
+    int stat3 = 0;
+    int stat4 = 0;
+
+    while (true){
         
         try {
             pgn.ParseNextGame();
-            //std::cout << pgn.Dump() << std::endl;
-        } catch (const NoGameFound &e) {
-            puts(GREY "[RETURN] No more games found" RESET);
-            toggle = true;
-        } /*catch (const InvalidTagName &e) {
-            puts(GREY "[RETURN] Invalid tag name" RESET);
-            toggle = true;
-        } catch (const std::exception &e) {
-            puts(GREY "[RETURN] Exception caught: " RESET);
-            puts(e.what());
-            toggle = true;
-        }*/
+            
+            if (debug == true){
+                std::cout << ORANGE "[Debug] Round : " << round << RESET << std::endl;
+            }
+            
+            round++;
+        } catch (const NoGameFound& e) {
+            if (debug == true){
+                std::cout << ORANGE "[Debug] No more games found" RESET << std::endl;
+            }
+            
+            break;
+        }
 
 
         // [Latex] Add header
@@ -166,18 +177,18 @@ void generator(char file_name[]){
         
         buffer
         << "\\chessevent{" << pgn.GetTagValue("Event") << "}\n"
-        << "\\chessopening{" << pgn.GetTagValue("Site") << "}\n\n";
+        << "\\chessopening{" << pgn.GetTagValue("Site") << "}\n\n"
 
-        /*<< "Date : " << pgn.GetTagValue("Date") << "\n"
+        << "Date : " << pgn.GetTagValue("Date") << "\n"
         << "EventDate : " << pgn.GetTagValue("EventDate") << "\n"
         << "Round : " << pgn.GetTagValue("Round") << "\n"
         << "Result : " << pgn.GetTagValue("Result") << "\n"
         << "\\whitename{" << pgn.GetTagValue("White") << "}" << "\n"
-        << "\\blackname{" << pgn.GetTagValue("Black") << "}" << "\n"
-        << "\\ECO{" << pgn.GetTagValue("ECO") << "}" << "\n"
+        << "\\blackname{" << pgn.GetTagValue("Black") << "}" << "\n";
+        //<< "\\ECO{" << pgn.GetTagValue("ECO") << "}" << "\n"
         //<< "\\whiteelo{" << pgn.GetTagValue("WhiteElo") << "}" << "\n"
         //<< "\\blackelo{" << pgn.GetTagValue("BlackElo") << "}" << "\n"
-        << "PlyCount : " << pgn.GetTagValue("PlyCount") << "\n" << "\n\n";*/
+        //<< "PlyCount : " << pgn.GetTagValue("PlyCount") << "\n" << "\n\n";
 
         // [Latex] Add body
         buffer
@@ -194,47 +205,153 @@ void generator(char file_name[]){
         int length = m->GetLength();
         std::string comt = "";
 
-        std::cout << length << std::endl;
+        stat1 = length + stat1;
+
+        int bcl = 0;
+
+        // Calcul
+        length++;
+
+        int lengthMod = length % 2;
+        length = (length - lengthMod) / 2;
+
+        int remainder = length % range;
+        int quotient = length / range;
+
+        if(remainder > 0){
+            quotient++;
+        }
+
+        if (debug == true){
+            std::cout << ORANGE "[Debug] HalfMove : " << length << RESET << std::endl;
+            std::cout << ORANGE "[Debug] Reste : " << remainder << RESET << std::endl;
+            std::cout << ORANGE "[Debug] Quotien : " << quotient << RESET << std::endl;
+        }
         
-        for (int xyz = 0; xyz < length; xyz++) {
+        for(int loop1 = 0; loop1 < quotient; loop1++){
+            
+            if (debug == true){
+                std::cout << ORANGE << loop1 << RESET << ", " << std::endl;
+            }
+
             buffer << "\\mainline{";
 
-            for(int yzx = 0; yzx < range; yzx++){
-                buffer << m->count << ". ";
-
-                if(xyz == length--){
-                    buffer << m->move << " ";
-                    
-                    if(m->comment.empty()){
-
-                    }else{
-                        comt = comt + m->comment + "; ";
-                    }
-
-                    //m = m->MainLine;
-                }else{
-                    for(int zxy = 0; zxy < 2; zxy++){
-                        buffer << m->move << " ";
+            if (remainder > 0){
+                if (loop1 == (quotient--)) {
+                    for (int yzx = 0; yzx < remainder; yzx++) {
+                        buffer << m->GetHalfMoveAt(bcl)->count << ". ";
                         
-                        if(m->comment.empty()){
-
-                        }else{
-                            comt = comt + m->comment + "; ";
+                        if (debug == true){
+                            std::cout << m->GetHalfMoveAt(bcl)->count << ", ";
                         }
 
-                        m = m->MainLine;
-                        std::cout << m->move << std::endl;
+                        if (bcl == ((length * 2) -2)) {
+                            buffer << m->GetHalfMoveAt(bcl)->move  << " ";
+                            
+                            if (m->GetHalfMoveAt(bcl)->comment.empty()) {
 
-                        if(m == NULL){
-                            std::cout << "m est null" << std::endl;
+                            } else {
+                                comt = comt + m->GetHalfMoveAt(bcl)->comment + "; ";
+                            }
+
+                            if (debug == true){
+                                std::cout << m->GetHalfMoveAt(bcl)->move << std::endl;
+                                std::cout << ORANGE "  [Debug] Je suis passé par là" RESET << std::endl;
+                            }
+                            
+
+                            //bcl++;
+                        } else {
+                            for (int zxy = 0; zxy < 2; zxy++) {
+                                buffer << m->GetHalfMoveAt(bcl)->move  << " ";
+                                
+                                if (m->GetHalfMoveAt(bcl)->comment.empty()) {
+
+                                } else {
+                                    comt = comt + m->GetHalfMoveAt(bcl)->comment + "; ";
+                                }
+
+                                if (debug == true){
+                                    std::cout << m->GetHalfMoveAt(bcl)->move << std::endl;
+                                }
+
+                                bcl++;
+                            }
+                        }
+                    }
+                } else {
+                    for (int yzx = 0; yzx < range; yzx++) {
+                        buffer << m->GetHalfMoveAt(bcl)->count << ". ";
+                        
+                        if (debug == true){
+                            std::cout << m->GetHalfMoveAt(bcl)->count << ", ";
+                        }
+
+                        for (int zxy = 0; zxy < 2; zxy++) {
+                            buffer << m->GetHalfMoveAt(bcl)->move  << " ";
+                            
+                            if (m->GetHalfMoveAt(bcl)->comment.empty()) {
+
+                            } else {
+                                comt = comt + m->GetHalfMoveAt(bcl)->comment + "; ";
+                            }
+
+                            if (debug == true){
+                                std::cout << m->GetHalfMoveAt(bcl)->move << std::endl;
+                            }
+
+                            bcl++;
+                        }
+                    }
+                }
+                
+            } else {
+                for (int yzx = 0; yzx < range; yzx++) {
+                    buffer << m->GetHalfMoveAt(bcl)->count << ". ";
+                    
+                    if (debug == true){
+                        std::cout << m->GetHalfMoveAt(bcl)->count << ", ";
+                    }
+
+                    if (bcl == ((length * 2) -2)) {
+                        buffer << m->GetHalfMoveAt(bcl)->move  << " ";
+                        
+                        if (m->GetHalfMoveAt(bcl)->comment.empty()) {
+
+                        } else {
+                            comt = comt + m->GetHalfMoveAt(bcl)->comment + "; ";
+                        }
+
+                        if (debug == true){
+                            std::cout << m->GetHalfMoveAt(bcl)->move << std::endl;
+                            std::cout << ORANGE "  [Debug] Je suis passé par là" RESET << std::endl;
+                        }
+
+                        //bcl++;
+                    } else {
+                        for (int zxy = 0; zxy < 2; zxy++) {
+                            buffer << m->GetHalfMoveAt(bcl)->move  << " ";
+                            
+                            if (m->GetHalfMoveAt(bcl)->comment.empty()) {
+
+                            } else {
+                                comt = comt + m->GetHalfMoveAt(bcl)->comment + "; ";
+                            }
+
+                            if (debug == true){
+                                std::cout << m->GetHalfMoveAt(bcl)->move << std::endl;
+                            }
+
+                            bcl++;
                         }
                     }
                 }
             }
             
+            
             buffer << "}\n";
 
-            if(comt.empty()){
+            if (comt.empty()) {
                 buffer << "\\scalebox{0.90}{\\chessboard}\n";
             } else {
                 buffer << "\\xskakcomment{\\small\\texttt\\justifying{\\textcolor{darkgray}{~ " << comt << " }}}\n\n" << "\\scalebox{0.90}{\\chessboard}\n";
@@ -245,6 +362,11 @@ void generator(char file_name[]){
         << "\nScore : " << pgn.GetResult() << "\n\n"
         << "\\end{multicols}\n\n"
         << "\\newpage\n\n";
+    }
+
+    if (stat == true){
+        std::cout << GREY "[Stat] Total round : " << round << RESET << std::endl;
+        std::cout << GREY "[Stat] Total HalfMove : " << stat1 << RESET << std::endl;
     }
     
     // Fermeture du document
