@@ -1,6 +1,0 @@
-/srv/http/cours/r208/libpgnp/pgnp/build/CMakeFiles/pgnp.dir
-/srv/http/cours/r208/libpgnp/pgnp/build/CMakeFiles/edit_cache.dir
-/srv/http/cours/r208/libpgnp/pgnp/build/CMakeFiles/rebuild_cache.dir
-/srv/http/cours/r208/libpgnp/pgnp/build/libs/chess-move-interface/CMakeFiles/ChessMoveInterface.dir
-/srv/http/cours/r208/libpgnp/pgnp/build/libs/chess-move-interface/CMakeFiles/edit_cache.dir
-/srv/http/cours/r208/libpgnp/pgnp/build/libs/chess-move-interface/CMakeFiles/rebuild_cache.dir

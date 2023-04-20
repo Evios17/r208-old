@@ -148,13 +148,13 @@ void generator(char file_name[]){
         try {
             pgn.ParseNextGame();
             //std::cout << pgn.Dump() << std::endl;
-        } catch (const NoGameFound& e) {
+        } catch (const NoGameFound &e) {
             puts(GREY "[RETURN] No more games found" RESET);
             toggle = true;
-        } /*catch (const InvalidTagName& e) {
+        } /*catch (const InvalidTagName &e) {
             puts(GREY "[RETURN] Invalid tag name" RESET);
             toggle = true;
-        } catch (const std::exception& e) {
+        } catch (const std::exception &e) {
             puts(GREY "[RETURN] Exception caught: " RESET);
             puts(e.what());
             toggle = true;
@@ -210,6 +210,11 @@ void generator(char file_name[]){
                     }
 
                     m = m->MainLine;
+                    std::cout << m->move << std::endl;
+
+                    if(m == NULL){
+                        std::cout << "m est null" << std::endl;
+                    }
                 }
             }
             
