@@ -193,6 +193,8 @@ void generator(char file_name[]){
         int range = 5;
         int length = m->GetLength();
         std::string comt = "";
+
+        std::cout << length << std::endl;
         
         for (int xyz = 0; xyz < length; xyz++) {
             buffer << "\\mainline{";
@@ -200,7 +202,7 @@ void generator(char file_name[]){
             for(int yzx = 0; yzx < range; yzx++){
                 buffer << m->count << ". ";
 
-                for(int zxy = 0; zxy < 2; zxy++){
+                if(xyz == length--){
                     buffer << m->move << " ";
                     
                     if(m->comment.empty()){
@@ -209,11 +211,23 @@ void generator(char file_name[]){
                         comt = comt + m->comment + "; ";
                     }
 
-                    m = m->MainLine;
-                    std::cout << m->move << std::endl;
+                    //m = m->MainLine;
+                }else{
+                    for(int zxy = 0; zxy < 2; zxy++){
+                        buffer << m->move << " ";
+                        
+                        if(m->comment.empty()){
 
-                    if(m == NULL){
-                        std::cout << "m est null" << std::endl;
+                        }else{
+                            comt = comt + m->comment + "; ";
+                        }
+
+                        m = m->MainLine;
+                        std::cout << m->move << std::endl;
+
+                        if(m == NULL){
+                            std::cout << "m est null" << std::endl;
+                        }
                     }
                 }
             }

@@ -2,7 +2,7 @@ CC=g++
 
 all: main
 
-main: main.c++
+main: main.cpp
 	$(CC) $^ -o main -I pgnp/src -I pgnp/libs/chess-move-interface/src -L pgnp/build -lpgnp
 
 run:
