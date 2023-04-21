@@ -9,6 +9,8 @@
     
     <title>Document</title>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
     <style>
         *{
             margin: 0;
@@ -29,7 +31,96 @@
             display: flex;
             justify-content: center;
             align-items: center;
+
+            background-color: #eeeeee;
         }
+
+
+
+
+
+
+
+        .loader-layout{
+            width: 100%;
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            background-color: #eeeeee27;
+            backdrop-filter: blur(10px);
+
+            font-size: 18px;
+
+            z-index: 1000;
+        }
+
+        .loader-box{
+            padding: 30px 40px;
+
+            background-color: #ffffff;
+
+            border-radius: 20px;
+
+            font-size: 1.1em;
+        }
+
+        .loader {
+            width: 45px;
+            height: 45px;
+
+            margin: 0 auto 30px auto;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: relative;
+            
+            background-color: #ccccff;
+            border-radius: 50%;
+
+            animation: loader 1s infinite alternate;
+        }
+
+        .loader:before{
+            content: "";
+
+            width: 25px;
+            height: 25px;
+
+            display: block;
+
+            position: absolute;
+
+            background-color: #afafd8;
+            border-radius: 50%;
+
+            animation: loader 1s infinite alternate;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes loader {
+            from {
+                transform: scale(0.8);
+            } to {
+                transform: scale(1.3);
+            }
+        }
+
+
+
+
+
+
+
+
         .application{
             padding: 30px;
 
@@ -37,17 +128,16 @@
             flex-direction: column;
             gap: 35px;
 
-            background-color: #eee;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px 0 #dadada;
             border-radius: 40px;
-        }
-        .application, form{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
         
         .dropzone{
+            aspect-ratio: 16 / 10;
+            width: 100%;
+
+            margin: auto;
             padding: 60px 20px;
 
             display: flex;
@@ -64,76 +154,217 @@
             box-shadow: 0 0 0 10px #fff;
         }
 
-        .dropzone  span{
-            color: #969696;
+        .highlight{
+            background-color: #0000ff;
+        }
+
+        .indiquator{
+            margin: 20px 0 0 0;
+            
         }
 
         .sub{
-            margin: 35px 0 0 0;
+            margin: 35px auto 0 auto;
             padding: 10px 20px;
+
+            display: block;
+
             border: none;
 
-            background-color: #00ffdb;
+            background-color: #ccccff;
             border-radius: 20px;
-            box-shadow: 0 0 0 10px #b8fbf1;
+            box-shadow: 0 0 0 5px #e4e4ff;
 
             font-size: 1em;
             cursor: pointer;
         }
+
+        .sub:hover{
+            box-shadow: 0 0 0 10px #e4e4ff;
+        }
+
+        .title{
+            margin: 0 0 6px 0;
+            font-size: 1.6em;
+        }
+
+        .subtitle{
+            font-size: 1em;
+        }
+
+        .description{
+            font-size: 1em;
+            color: #a3a3a3;
+        }
+
+
+
+
+
+
+
+
+        .drag-image{
+            width: 100%;
+
+            padding: 20px 20px 40px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            border: 2px dashed #dadada;
+            border-radius: 20px;
+
+            font-weight:400;
+            
+        }
+        .drag-image.active{
+            border: 2px solid #ff0000;
+        }
+        .drag-image .icon{
+            font-size: 30px;
+            color: #ff0000;
+        }
+        .drag-image .separator{
+            margin: 15px 0 20px 0;
+
+            font-weight: bold;
+        }
+        .drag-image button{
+            padding: 10px 15px;
+            
+            display: block;
+            
+            background-color: #ccccff;
+            box-shadow: 0 0 0 5px #e4e4ff;
+            border: none;
+            border-radius: 20px;
+
+            font-size: 1em;
+
+            cursor: pointer;
+        }
+
+        .drag-image button:hover{
+            box-shadow: 0 0 0 10px #e4e4ff;
+        }
+
+        .drag-image img{
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
+    <div class="loader-layout">
+        <div class="loader-box">
+            <div class="loader"></div>
+            <span>Chargement</span>
+        </div>
+    </div>
+
     <main class="application">
-        <h1>LaTex Converter</h1>
         <form action="" method="post">
-            <label for="dropzone" class="dropzone">
-                <span>Glissez votre fichier</span>
-                <span>ou</span>
-                <span>Cliquez sur la zone pour parcourir vos fichiers</span>
-                <input type="file" name="file" id="file" class="dropzone-input">
-            </label>
-            <input type="submit" name="submit" value="Convertir" class="sub">
+            <div class="drag-image">
+                <img src="sources/media/file.png" alt="" width="80px" style="display: none;">
+                <span class="indiquator">Drag and drop file here.</span>
+                <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <span class="separator">OR</span>
+                <button>Browse File</button>
+                <input type="file" name="file" id="file" hidden>
+            </div>
         </form>
+        <div>
+            <h1 class="title">BlackLaTex</h1>
+            <span class="subtitle">Converter PGN > LaTex.</span>
+        </div>
+        <span class="description">Once uploaded, your file will be converted automatically.</span>
 
         <?php
             if(isset($_POST["submit"])){
-                if($_FILES["file"]["error"] > 0){
-                    echo "Error: " . $_FILES["file"]["error"] . "<br>";
-                }else{
-                    $target_dir = "uploads/";
-                    $target_file = $target_dir . basename($_FILES["file"]["name"]);
-                    $file_type = pathinfo($target_file,PATHINFO_EXTENSION);
-    
-                    // Vérifier si le fichier est un fichier texte valide ou un fichier DOC/DOCX
-                    if($file_type != "txt" && $file_type != "doc" && $file_type != "docx"){
-                        echo "Error: Seuls les fichiers TXT, DOC et DOCX sont autorisés.";
+                if(isset($_FILES['file'])) {
+                    $targetDir = "input/";
+                    $fileName = basename($_FILES['file']['name']);
+                    $targetFilePath = $targetDir . $fileName;
+                    $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+                
+                    if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)) {
+                        echo "Le fichier " . $fileName . " a été téléchargé.";
                     } else {
-                        // télécharger le fichier original
-                        if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
-                            echo "Le fichier ". basename( $_FILES["file"]["name"]). " a été téléchargé avec succès.";
-    
-                            // Convertir le fichier en C
-                            $c_target_file = $target_dir . str_replace($file_type, 'c', basename($_FILES["file"]["name"])); // générer un nom de fichier cible pour le fichier converti
-                            $command = "/usr/bin/convert_program -i $target_file -o $c_target_file"; // command pour convertir le fichier
-                            exec($command);
-    
-                            // Vérifier si le fichier converti existe et le télécharger
-                            if (file_exists($c_target_file)) {
-                                header('Content-Type: application/octet-stream');
-                                header('Content-Disposition: attachment; filename="' . basename($c_target_file) . '"');
-                                header('Content-Length: ' . filesize($c_target_file));
-                                readfile($c_target_file);
-                            } else {
-                                echo "Erreur: le fichier converti n'existe pas.";
-                            }
-                        } else {
-                            echo "Erreur lors du téléchargement du fichier.";
-                        }
+                        echo "Une erreur s'est produite lors du téléchargement du fichier.";
                     }
                 }
             }
         ?>
     </main>
+
+    <script>
+
+        $(window).load(function() {
+            $(".loader-layout").fadeOut("slow");;
+        });
+
+
+
+
+		const dropArea = document.querySelector(".drag-image"),
+        dragText = dropArea.querySelector("h6"),
+        button = dropArea.querySelector("button"),
+        input = dropArea.querySelector("input");
+        let file; 
+
+        button.onclick = ()=>{
+        input.click(); 
+        }
+
+        input.addEventListener("change", function(){
+        
+        file = this.files[0];
+        dropArea.classList.add("active");
+        viewfile();
+        });
+
+        dropArea.addEventListener("dragover", (event)=>{
+        event.preventDefault();
+        dropArea.classList.add("active");
+        dragText.textContent = "Release to Upload File";
+        });
+
+
+        dropArea.addEventListener("dragleave", ()=>{
+        dropArea.classList.remove("active");
+        dragText.textContent = "Drag & Drop to Upload File";
+        }); 
+
+        dropArea.addEventListener("drop", (event)=>{
+        event.preventDefault(); 
+        
+        file = event.dataTransfer.files[0];
+        viewfile(); 
+        });
+
+        function viewfile(){
+        let fileType = file.type; 
+        let validExtensions = ["image/jpeg", "image/jpg", "image/png"];
+        if(validExtensions.includes(fileType)){ 
+            let fileReader = new FileReader(); 
+            fileReader.onload = ()=>{
+            let fileURL = fileReader.result; 
+            let imgTag = `<img src="${fileURL}" alt="image">`;
+            dropArea.innerHTML = imgTag; 
+            }
+            fileReader.readAsDataURL(file);
+        }else{
+            alert("This is not an Image File!");
+            dropArea.classList.remove("active");
+            dragText.textContent = "Drag & Drop to Upload File";
+        }
+        }
+	</script>
 
 </body>
 </html>

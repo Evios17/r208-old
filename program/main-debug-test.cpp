@@ -17,18 +17,26 @@ using namespace pgnp;
 #define CYAN "\033[0;36m"
 #define RESET "\033[0m"
 
-int main () {
+int main(int argc, char* argv[]) {
+    
+    bool debug_mode = false;
 
-    std::cout << CYAN "Début de la fonction main." RESET << std::endl;
+    if (argc > 1 && argv[1][0] == 'd') 
+    {
+        debug_mode = true;
+    }
+
+
+    if (debug_mode) std::cout << CYAN "Début de la fonction main." RESET << std::endl;
 
     // Insérer le fichier PGN dans le parser
     PGN pgn;
-    pgn.FromFile("example2.pgn");
+    pgn.FromFile("input/example2.pgn");
 
-    std::cout << YELLOW "Fichier trouvé, tentative de conversion." RESET << std::endl;
+    if (debug_mode) std::cout << YELLOW "Fichier trouvé, tentative de conversion." RESET << std::endl;
 
     // Créer le fichier de sortie et création du buffer
-    std::ofstream outfile("final.tex");
+    std::ofstream outfile("output/final.tex");
     std::stringstream buffer;
 
     // Création de l'entête du document
@@ -45,7 +53,7 @@ int main () {
     << "\\usepackage{ragged2e}\n\n\n"
     << "\\begin{document}\n\n";
 
-    // Variable pour conmpter le nombre de de games
+    // Variable pour compter le nombre de games
     int count=1;
 
     while (true) {
@@ -54,17 +62,17 @@ int main () {
 
             pgn.ParseNextGame();
 
-            std::cout << "Game n°" << count << ":" <<std::endl;
+            if (debug_mode) std::cout << "Game n°" << count << ":" <<std::endl;
             count++;
 
         } catch (const NoGameFound& e) {
 
-            std::cout << RED "Pas de nouvelle game trouvé, fin du fichier atteint." RESET << std::endl;
+            if (debug_mode) std::cout << RED "Pas de nouvelle game trouvée, fin du fichier atteint." RESET << std::endl;
             break;
 
         }
 
-        std::cout << PURPLE "J'ai passé le try/catch !" RESET << std::endl;
+        if (debug_mode) std::cout << PURPLE "J'ai passé le try/catch !" RESET << std::endl;
 
         HalfMove *m = new HalfMove();
         pgn.GetMoves(m);
@@ -102,7 +110,7 @@ int main () {
         int hmcount = 0;                                                        // Compte du half-move actuel dans la mainline
         bool firstmove = true, mainline_end = false, commenthere = false;       // Valeurs booleans pour les conditions
 
-        std::cout << YELLOW "Nombres de half-moves : " << m->GetLength() << RESET << std::endl;
+        if (debug_mode) std::cout << YELLOW "Nombres de half-moves : " << m->GetLength() << RESET << std::endl;
 
         for (int i=0 ; i < m->GetLength() ; i++) {
 
@@ -144,12 +152,12 @@ int main () {
 
             }
 
-            // Si le nombre de half-move est pas équivaut au nombre maximum que peut contenir une mainline, incrémenter le compte de half-move
+            // Si le nombre de half-move est pas équivalent au nombre maximum que peut contenir une mainline, incrémenter le compte de half-move
             if (hmcount != movesnb) {
 
                 hmcount++;
 
-            // Si le nombre est équivaut, initier la variable d'insertion de fin de mainline
+            // Si le nombre est équivalent, initier la variable d'insertion de fin de mainline
             } else {
 
                 mainline_end = true;
@@ -191,7 +199,7 @@ int main () {
 
     outfile << buffer.str();
 
-    std::cout << CYAN "Fin du programme." RESET << std::endl;
+    if (debug_mode) std::cout << CYAN "Fin du programme." RESET << std::endl;
 
     return EXIT_SUCCESS;
 }

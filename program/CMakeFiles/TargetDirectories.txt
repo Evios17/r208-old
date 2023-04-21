@@ -1,0 +1,9 @@
+/var/www/html/cours/r208/program/CMakeFiles/rebuild_cache.dir
+/var/www/html/cours/r208/program/CMakeFiles/edit_cache.dir
+/var/www/html/cours/r208/program/CMakeFiles/main.dir
+/var/www/html/cours/r208/program/pgnp/CMakeFiles/rebuild_cache.dir
+/var/www/html/cours/r208/program/pgnp/CMakeFiles/edit_cache.dir
+/var/www/html/cours/r208/program/pgnp/CMakeFiles/pgnp.dir
+/var/www/html/cours/r208/program/pgnp/libs/chess-move-interface/CMakeFiles/rebuild_cache.dir
+/var/www/html/cours/r208/program/pgnp/libs/chess-move-interface/CMakeFiles/edit_cache.dir
+/var/www/html/cours/r208/program/pgnp/libs/chess-move-interface/CMakeFiles/ChessMoveInterface.dir
