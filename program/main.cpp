@@ -37,93 +37,114 @@ int main (int argc, char *argv[]) {
 
     while ((opt = getopt (argc, argv, "i:o:n:sdhv")) != -1) {
         switch (opt) {
-            case 'i' :                                                                                            // -s : active le mode "serveur"
+            case 'i' :                                                                                            // entrée
                 file_input = optarg;
 
-                std::cout << "Nom du fichier en entrée : " << file_input << "\n" << std::endl;
+                std::cout << YELLOW "Nom du fichier en entrée : " RESET << file_input << std::endl;
 
                 break;
-            case 'o' :                                                                                            // -s : active le mode "serveur"
+            case 'o' :                                                                                            // sortie
                 output = true;
 
                 file_output = optarg;
 
-                std::cout << "Nom du fichier en sortie : " << file_output << "\n" << std::endl;
+                std::cout << YELLOW "Nom du fichier en sortie : " RESET << file_output << std::endl;
 
                 break;
-            case 'n' :                                                                                            // -s : active le mode "serveur"
+            case 'n' :                                                                                            // nombre de cout par mainline
                 hmperMain = atoi(optarg);
 
                 break;
-            case 's' :                                                                                            // -s : active le mode "serveur"
+            case 's' :                                                                                            // statistiques du fichier pgn
                 puts("in -o");
                 return(EXIT_SUCCESS);
 
                 break;
-            case 'd' :                                                                                            // -s : active le mode "serveur"
+            case 'd' :                                                                                            // mode debug
                 debug = true;
                 return(EXIT_SUCCESS);
 
                 break;
-            case 'h' :                                                                                            // -h : affiche l'aide
-                std::cout << "Info :" << std::endl;
-                std::cout << "Licence\t -- GPL" << std::endl;
-                std::cout << "Author\t -- Product by Antoine DORO, Lukas BOYER and Cylian HOUTMANN" << std::endl;
-                std::cout << "Description\t -- \n" << std::endl;
+            case 'h' :                                                                                            // afficher l'aide
+                std::cout << "\nAuthor : " YELLOW "Software made by Antoine DORO, Lukas BOYER and Cylian HOUTMANN.\n" RESET << std::endl;
+                std::cout << "Description : " YELLOW "BlackLaTeX is a trivial PGN to TeX converter. You simply need to input a PGN file, and it will print you a beautiful TeX document of your chess games. You can also indicate an output and the number of counts before showing a chessboard.\n" RESET << std::endl;
                 
-                std::cout << "Options :" << std::endl;
-                std::cout << "-i\t -- Path of the input PGN file" << std::endl;
-                std::cout << "-o\t -- Name of the output TEX file" << std::endl;
-                std::cout << "-n\t -- Number of moves before showing the chessboard" << std::endl;
-                std::cout << "-s\t -- Turn on stat mode" << std::endl;
-                std::cout << "-d\t -- Turn on debug mode" << std::endl;
-                std::cout << "-h\t -- Show help" << std::endl;
-                std::cout << "-v\t -- Show version" << std::endl;
+                std::cout << "Options :\n" << std::endl;
+                std::cout << YELLOW "   -i\t" CYAN " -- Path of the input PGN file" RESET << std::endl;
+                std::cout << YELLOW "   -o\t" CYAN " -- Name of the output TEX file" RESET << std::endl;
+                std::cout << YELLOW "   -n\t" CYAN " -- Number of moves before showing the chessboard" RESET << std::endl;
+                std::cout << YELLOW "   -s\t" CYAN " -- Turn on stat mode" RESET << std::endl;
+                std::cout << YELLOW "   -d\t" CYAN " -- Turn on debug mode" RESET << std::endl;
+                std::cout << YELLOW "   -h\t" CYAN " -- Show help" RESET << std::endl;
+                std::cout << YELLOW "   -v\t" CYAN " -- Show version\n" RESET << std::endl;
+
+                std::cout << "Example : " PURPLE << argv[0] << BLUE " -i" PURPLE " input.pgn " BLUE "-o" PURPLE " output.tex " BLUE "-n" PURPLE " 5\n" RESET << std::endl;
+
                 exit(EXIT_SUCCESS);
 
                 break;
             case 'v':                                                                                            // -v : affiche la version
-                std::cout << "BlackLatex version 1.0" << std::endl;
+                std::cout << "\nBlackLatex " GREEN "version 1.0\n" RESET << std::endl;
+
                 exit(EXIT_SUCCESS);
 
                 break;
             default :
-                std::cout << RED "[ERROR] Wrong syntax, you can use -h to see options." RESET << std::endl;
+                std::cerr << RED "ERROR: Wrong syntax, use -h to see available options." RESET << std::endl;
 
                 exit(EXIT_FAILURE);
         }
         
     }
 
-    std::cout << CYAN "Début de la fonction main." RESET << std::endl;
+    std::cout << CYAN "Début de la fonction main.\n" RESET << std::endl;
 
     if(file_input == ""){
-        std::cout << YELLOW "Fichier non trouvé, veuillez indiquer un fichier à convertir." RESET << std::endl;
-        std::cout << CYAN "Fin du programme." RESET << std::endl;
+
+        std::cerr << RED"Error : Input file is missing." RESET << std::endl;
         
-        return EXIT_FAILURE;
+        exit(EXIT_FAILURE);
+
     } else {
+
         std::cout << YELLOW "Fichier trouvé, tentative de conversion." RESET << std::endl;
+
     }
     
     // Insérer le chemin du fichier PGN dans le parser
     PGN pgn;
     pgn.FromFile(file_input);
 
-    // Créer le fichier de sortie et création du buffer
     
-    // Vérifie si l'on a choisis de donner un nom au fichier ".tex". Si tel n'est pas le cas, on nomme 
+    // Nom de fichier en sortie
     std::string outname;
 
+    // Si l'option "-o " a été utilisé
     if(output == true){
-        outname = "output/" + file_output + ".tex";
+
+        // Tester si le nom d'ouput donné contient au moins 4 caractères et contient ".tex" à la fin de celui-ci
+        if ( file_output.length() >= 4 && file_output.substr(file_output.length()-4, file_output.length()) == ".tex" ) {
+
+            outname = file_output;
+
+        // Si il n'y a pas de ".tex" indiqué dans le nom souhaité, rajouter un ".tex" à la fin de celui-ci
+        } else if ( file_output.substr(file_output.length()-1, file_output.length()) == "/" ) {
+
+            std::cerr << RED "Error : Output file name is incorrect" RESET << std::endl;
+
+            exit(EXIT_FAILURE);
+
+        } else {
+
+            outname = file_output + ".tex";
+
+        }
+
     } else {
 
         file_output = file_input.substr((file_input.find_last_of("/") + 1 ));
-
         file_output = file_output.substr(0, file_output.length() - 4);
-        
-        outname = "output/" + file_output + ".tex";
+        outname = file_output + ".tex";
     }
     
     std::ofstream outfile(outname);

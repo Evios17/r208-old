@@ -130,8 +130,8 @@ pgnp/libs/chess-move-interface/clean: pgnp/libs/chess-move-interface/CMakeFiles/
 # Target rules for target CMakeFiles/main.dir
 
 # All Build rule for target.
-CMakeFiles/main.dir/all: pgnp/libs/chess-move-interface/CMakeFiles/ChessMoveInterface.dir/all
 CMakeFiles/main.dir/all: pgnp/CMakeFiles/pgnp.dir/all
+CMakeFiles/main.dir/all: pgnp/libs/chess-move-interface/CMakeFiles/ChessMoveInterface.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/var/www/html/cours/r208/program/CMakeFiles --progress-num=3,4 "Built target main"
